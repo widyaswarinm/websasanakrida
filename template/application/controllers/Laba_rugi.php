@@ -22,10 +22,40 @@ class Laba_rugi extends CI_Controller{
      */
     function index()
     {
+        
         $data['m_laba_rugi'] = $this->M_laba_rugi->get_all_m_laba_rugi();
 
         $data['_view'] = 'laba_rugi/index';
         $this->load->view('layout/main', $data);
+    }
+
+    function pencarian(){
+        
+        if($this->input->get('bulan')!=''){
+            $bulan=$this->input->get('bulan');
+            $tahun=$this->input->get('tahun');
+
+            $tahunbulan = $tahun.$bulan;
+            
+            $data['m_laba_rugi'] = $this->M_laba_rugi->pencarian_bulan($tahunbulan);
+
+        }else if($this->input->get('triwulan')!=''){
+            $triwulan=$this->input->get('triwulan');
+            $tahun=$this->input->get('tahun');
+
+            $tahunbulan1 = $tahun.substr($triwulan, 0,2);
+            $tahunbulan2 = $tahun.substr($triwulan, -4,-2);
+            $tahunbulan3 = $tahun.substr($triwulan,-2);
+            
+            $data['m_laba_rugi'] = $this->M_laba_rugi->pencarian_triwulan($tahunbulan1, $tahunbulan2, $tahunbulan3);
+        }
+
+
+            
+        $data['_view'] = 'laba_rugi/index';
+        $this->load->view('layout/main', $data);
+        
+
     }
     
 }

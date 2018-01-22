@@ -15,12 +15,13 @@
                         </div>
                         <div class="body">
                         <div class="demo-radio-button" >
+                        <form method="get" action="<?php echo base_url("laba_rugi/pencarian")?>">
                         <div class="row clearfix">
                                 <div class="col-sm-4">
                                     <input name="group1" type="radio" id="bulan" class="radio-col-blue-grey with-gap" />
                                     <label for="bulan">Bulan</label>
                                     
-                                    <select class="form-control show-tick">
+                                    <select class="form-control show-tick" name="bulan">
                                         <option value="">-- Please select --</option>
                                         <option value="01">Januari</option>
                                         <option value="02">Februari</option>
@@ -37,20 +38,20 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
-                                    <input name="group1" type="radio" id="triwulan" class="radio-col-blue-grey with-gap"/>
+                                    <input name="group2" type="radio" id="triwulan" class="radio-col-blue-grey with-gap"/>
                                     <label for="triwulan">Triwulan</label>
-                                    <select class="form-control show-tick">
+                                    <select class="form-control show-tick" name="triwulan"  ); ?>>
                                         <option value="">-- Please select --</option>
-                                        <option value="10">Januari - Maret</option>
-                                        <option value="20">April - Juni</option>
-                                        <option value="30">Juli - September</option>
-                                        <option value="40">Oktober - Desember</option>
+                                        <option value="010203">Januari - Maret</option>
+                                        <option value="040506">April - Juni</option>
+                                        <option value="070809">Juli - September</option>
+                                        <option value="101112">Oktober - Desember</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
-                                    <input name="group1" type="radio" id="semester" class="radio-col-blue-grey with-gap"/>
+                                    <input name="group3" type="radio" id="semester" class="radio-col-blue-grey with-gap"/>
                                     <label for="semester">Semester</label>
-                                    <select class="form-control show-tick">
+                                    <select class="form-control show-tick" name="semester">
                                         <option value="">-- Please select --</option>
                                         <option value="10">Januari - Juni</option>
                                         <option value="20">Juli - Desember</option>
@@ -60,7 +61,7 @@
                         <div class="row clearfix">
                                 <div class="col-sm-6">
                                     <p>Tahun</p>
-                                    <select class="form-control show-tick" name = "tahun">
+                                    <select class="form-control show-tick" name = "tahun" required="">
                                         <option value="">-- Please Select --</option>
                                         <?php 
                                             for($i = '2016'; $i<=date('Y'); $i+=1){
@@ -72,22 +73,23 @@
                         </div>
                         <div class="row clearfix">
                         <div class="col-sm-6">
-                        <button type="button" class="btn bg-blue-grey waves-effect">
+                            <button type="submit" class="btn bg-blue-grey waves-effect">
                                     <i class="material-icons">search</i>
                                     <span>SEARCH</span>
+                             </button>
                         </div>
-                        </button>
                         </div>
                         </div>
+                        </form>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
                                         <tr>
                                             <th>No. </th>
-                                            <th>Head</th>
                                             <th>Kode</th>
                                             <th>Nama</th>
-                                            <th>Saldo</th>
+                                            <th>Debit</th>
+                                            <th>Kredit</th>
                                             <th>Bulan</th>
                                             <th>Tahun</th>
                                         </tr>
@@ -95,10 +97,10 @@
                                     <tfoot>
                                         <tr>
                                             <th>No. </th>
-                                            <th>Head</th>
                                             <th>Kode</th>
                                             <th>Nama</th>
-                                            <th>Saldo</th>
+                                            <th>Debit</th>
+                                            <th>Kredit</th>
                                             <th>Bulan</th>
                                             <th>Tahun</th>
                                         </tr>
@@ -107,14 +109,24 @@
                                         <?php $no=1;foreach($m_laba_rugi as $m){ ?>
                                             <tr>
                                                 <td><?php echo $no; ?></td>
-                                                <td><?php echo $m['head']; ?></td>
                                                 <td><?php echo $m['kode']; ?></td>
                                                 <td><?php echo $m['nama']; ?></td>
-                                                <td><?php echo $m['saldo']; ?></td>
+                                                <td><?php if ($m['head'] == '4'){
+                                                        echo $m['saldo']; 
+                                                    }else {
+                                                        echo '0';
+                                                    }
+                                                    ?></td>                    
+                                                <td><?php if ($m['head'] == '6' || $m['head'] == '5'){
+                                                        echo $m['saldo']; 
+                                                    }else {
+                                                        echo '0';
+                                                    }
+                                                    ?></td>
                                                 <td>
                                                     <?php
                                                     $tahbul = $m['tahunbulan'];
-                                                    $bulan = substr($tahbul, 5, 7);
+                                                    $bulan = substr($tahbul, -2);
                                                     $tahun = substr($tahbul, 0, 4);
                                                     
                                                     switch($bulan){
