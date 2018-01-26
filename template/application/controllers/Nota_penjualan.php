@@ -21,7 +21,7 @@ class Nota_penjualan extends CI_Controller {
             $opt[$customer] = $customer;
         }
 
-        $data['form_customer'] = form_dropdown('',$opt,'','id="nama" class="form-control"');
+        $data['form_customer'] = form_dropdown('',$opt,'','id="nama" class="form-control" data-live-search="true"');
         $data['_view'] = 'nota_penjualan/index';
         $this->load->view('layout/main', $data);
     }

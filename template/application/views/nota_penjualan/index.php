@@ -214,9 +214,7 @@
     <!-- Autosize Plugin Js -->
     <script src="<?php echo base_url('asset/template') ?>/plugins/autosize/autosize.js"></script>
 
-    <script type="text/javascript" src="<?php echo base_url('asset/template'); ?>/js/jquery.price_format.1.7.min.js"></script>
-
-      <!-- Moment Plugin Js -->
+    <!-- Moment Plugin Js -->
     <script src="<?php echo base_url('asset/template'); ?>/plugins/momentjs/moment.js"></script>
 
     <!-- Bootstrap Material Datetime Picker Plugin Js -->

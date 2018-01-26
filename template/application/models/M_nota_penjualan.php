@@ -5,8 +5,8 @@ class M_nota_penjualan extends CI_Model {
 
     var $table = 'trans_penjualan';    
 
-    var $column_order = array(null, 'tanggal','nomortransaksi','nama','totalbelumdiskon','biaya','country','total'); //set column field database for datatable orderable
-    var $column_search = array('tanggal','nomortransaksi','nama','totalbelumdiskon','biaya','country','total'); //set column field database for datatable searchable 
+    var $column_order = array(null, 'tanggal','nomortransaksi','nama','totalbelumdiskon','biaya','totalpajak','total'); //set column field database for datatable orderable
+    var $column_search = array('tanggal','nomortransaksi','nama','totalbelumdiskon','biaya','totalpajak','total'); //set column field database for datatable searchable 
     var $order = array('tanggal' => 'asc'); // default order 
 
     public function __construct()
@@ -45,11 +45,31 @@ class M_nota_penjualan extends CI_Model {
                 if($i===0) // first loop
                 {
                     $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
-                    $this->db->like($item, $_POST['search']['value']);
+                    $this->db->like('tanggal', $_POST['search']['value']);
                 }
-                else
+                else if($i===1)
                 {
-                    $this->db->or_like($item, $_POST['search']['value']);
+                    $this->db->or_like('nomortransaksi', $_POST['search']['value']);
+                }
+				else if($i===2)
+                {
+                    $this->db->or_like('nama', $_POST['search']['value']);
+                }
+				else if($i===3)
+                {
+                    $this->db->or_like('totalbelumdiskon', $_POST['search']['value']);
+                }
+				else if($i===4)
+                {
+                    $this->db->or_like('biaya', $_POST['search']['value']);
+                }
+				else if($i===5)
+                {
+                    $this->db->or_like('totalpajak', $_POST['search']['value']);
+                }
+				else if($i===6)
+                {
+                    $this->db->or_like('total', $_POST['search']['value']);
                 }
 
                 if(count($this->column_search) - 1 == $i) //last loop
