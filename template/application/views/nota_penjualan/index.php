@@ -28,7 +28,7 @@
 								<div class="form-group">
 									<div class="form-line">
 										<label for="tglawal">Tanggal Awal</label> 
-										<input type="text" class="datepicker form-control" id="tglawal" placeholder="Please choose a date...">
+										<input type="text" class="datepicker form-control" id="tglawal" placeholder="Please choose a date..." required>
 									</div>
 								</div>
                             </div>
@@ -45,7 +45,7 @@
 								<div class="form-group">
 									<div class="form-line">
 										<label for="tglakhir">Tanggal Akhir</label> 
-										<input type="text" class="datepicker form-control" id="tglakhir" placeholder="Please choose a date...">
+										<input type="text" class="datepicker form-control" id="tglakhir" placeholder="Please choose a date..." required>
 									</div>
 								</div>
                             </div>
@@ -65,13 +65,10 @@
 						</div>
                         </form>
 
-                        <?php if($this->session->flashdata('message')!=null OR $this->session->flashdata('message')!='') {?>
-                            <div class="alert alert-danger alert-dismissable">
-                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                    <?php echo $this->session->flashdata('message'); ?>
-                                    <?php echo $this->session->set_flashdata('message',''); ?>
+                            <div id="alert-nota" class="alert alert-danger alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                Isikan data dengan lengkap!						
                             </div>
-                        <?php } ?>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover dataTable js-exportable" id="table">
                                     <thead>
@@ -133,10 +130,10 @@
 		var table;
 
 		$(document).ready(function() {
-
+			$("#alert-nota").hide();
 			//datatables
 			table = $('#table').DataTable({ 
-
+				"paging": false,
 				"processing": true, //Feature control the processing indicator.
 				"serverSide": true, //Feature control DataTables' server-side processing mode.
 				"order": [], //Initial no order.
@@ -167,11 +164,16 @@
 
 			
 			$('#btn-filter').click(function(){ //button filter event click
-				table.ajax.reload();  //just reload table
+				if($('#tglawal').val()=='' || $('#tglakhir').val()==''){					
+					$("#alert-nota").show();
+				} else{
+					$("#alert-nota").hide();
+					table.ajax.reload();  //just reload table
+				}
 			});
 			$('#btn-reset').click(function(){ //button reset event click
 				$('#form-filter')[0].reset();
-				//$("#nama option:''").attr("selected", true);
+				$("#alert-nota").hide();
 				table.ajax.reload();  //just reload table
 			});
 

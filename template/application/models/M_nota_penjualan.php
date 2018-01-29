@@ -19,18 +19,22 @@ class M_nota_penjualan extends CI_Model {
     {
         
         //add custom filter here
-        if($this->input->post('nama'))
+        if($this->input->post('nama')!='')
         {
             $this->db->where('nama', $this->input->post('nama'));
         }
-		if($this->input->post('tglawal'))
+		if($this->input->post('tglawal')!='')
 		{
 			$this->db->where('tanggal >=', date('Y-m-d H:i:s', strtotime($this->input->post('tglawal').'00:00:00')));
 		}
-		if($this->input->post('tglakhir'))
+		if($this->input->post('tglakhir')!='')
 		{
 			$this->db->where('tanggal <=', date('Y-m-d H:i:s', strtotime($this->input->post('tglakhir').'23:59:59')));
-		}	
+		}
+		if($this->input->post('nama')=='' && $this->input->post('tglawal')=='' && $this->input->post('tglakhir')==''){
+			$this->db->where('tanggal >=', date('Y-m-01 H:i:s', strtotime(date('Y-m-d').'00:00:00')));
+			$this->db->where('tanggal <=', date('Y-m-t H:i:s', strtotime(date('Y-m-d').'23:59:59')));
+		}		
 
         $this->db->select('*');
         $this->db->from($this->table);
