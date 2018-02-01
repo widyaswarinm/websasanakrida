@@ -32,25 +32,64 @@ class M_laba_rugi extends CI_Model
 
     }
 
+    function get_all_m_laba_rugi_sekarang($tahunbulan_s)
+    {   
+        return $this->db->query("SELECT head,a.kode,nama,saldo,tahunbulan,proyekfk,kontrakfk FROM 
+                               ((SELECT head,kode,SUM(saldo) AS saldo,tahunbulan,proyekfk,kontrakfk FROM acc_pendapatan WHERE 
+                               tahunbulan='$tahunbulan_s' GROUP BY head,kode,tahunbulan)  UNION 
+                               (SELECT head,kode,SUM(saldo) AS saldo,tahunbulan,proyekfk,kontrakfk FROM acc_biaya WHERE tahunbulan='$tahunbulan_s' GROUP BY head,kode,tahunbulan) ) a
+                                LEFT JOIN acc_kiraan b ON a. kode = b.kode  ORDER BY tahunbulan, kode")->result_array();
+
+    }
+
+    function pencarian_tahun($tahun)
+    {   
+        return $this->db->query("SELECT head,a.kode,nama,saldo,tahunbulan,proyekfk,kontrakfk FROM 
+                               ((SELECT head,kode,SUM(saldo) AS saldo,tahunbulan,proyekfk,kontrakfk FROM acc_pendapatan WHERE tahunbulan LIKE'$tahun%' GROUP BY head,kode,tahunbulan)  UNION 
+                               (SELECT head,kode,SUM(saldo) AS saldo,tahunbulan,proyekfk,kontrakfk FROM acc_biaya WHERE tahunbulan LIKE'$tahun%' GROUP BY head,kode,tahunbulan) ) a
+                                LEFT JOIN acc_kiraan b ON a. kode = b.kode  ORDER BY tahunbulan, kode")->result_array();
+
+    }
+
     function pencarian_bulan($tahunbulan)
     {   
         return $this->db->query("SELECT head,a.kode,nama,saldo,tahunbulan,proyekfk,kontrakfk FROM 
                                ((SELECT head,kode,SUM(saldo) AS saldo,tahunbulan,proyekfk,kontrakfk FROM acc_pendapatan WHERE tahunbulan='$tahunbulan' GROUP BY head,kode,tahunbulan)  UNION 
                                (SELECT head,kode,SUM(saldo) AS saldo,tahunbulan,proyekfk,kontrakfk FROM acc_biaya WHERE tahunbulan='$tahunbulan' GROUP BY head,kode,tahunbulan) ) a
-                                LEFT JOIN acc_kiraan b ON a. kode = b.kode  ORDER BY tahunbulan, kode")->result_array();
+                                LEFT JOIN acc_kiraan b ON a.kode = b.kode  ORDER BY tahunbulan, kode")->result_array();
 
     }
 
-    function pencarian_triwulan($tahunbulan1, $tahunbulan2, $tahunbulan3)
+    function sum_saldo_pendapatan($tahunbulan)
     {   
-        return $this->db->query("SELECT head,a.kode,nama,saldo,tahunbulan,proyekfk,kontrakfk FROM 
-                               ((SELECT head,kode,SUM(saldo) AS saldo,tahunbulan,proyekfk,kontrakfk FROM acc_pendapatan WHERE tahunbulan='$tahunbulan1'||tahunbulan='$tahunbulan2'||tahunbulan='$tahunbulan3' GROUP BY head,kode,tahunbulan)  UNION 
-                               (SELECT head,kode,SUM(saldo) AS saldo,tahunbulan,proyekfk,kontrakfk FROM acc_biaya WHERE tahunbulan='$tahunbulan1'||tahunbulan='$tahunbulan2'||tahunbulan='$tahunbulan3' GROUP BY head,kode,tahunbulan) ) a
-                                LEFT JOIN acc_kiraan b ON a. kode = b.kode  ORDER BY tahunbulan, kode")->result_array();
-
+        return $this->db->query("SELECT SUM(saldo) AS saldo FROM (SELECT head,kode,SUM(saldo) AS saldo,tahunbulan,proyekfk,kontrakfk 
+                                FROM  acc_pendapatan WHERE tahunbulan='$tahunbulan' GROUP BY head,kode,tahunbulan) a
+                                LEFT JOIN acc_kiraan b ON a.kode = b.kode  ORDER BY tahunbulan, a.kode")->result_array();
 
     }
 
-    
+    function sum_saldo_biaya($tahunbulan)
+    {   
+        return $this->db->query("SELECT SUM(saldo) AS saldo FROM (SELECT head,kode,SUM(saldo) AS saldo,tahunbulan,proyekfk,kontrakfk 
+                                FROM  acc_biaya WHERE tahunbulan='$tahunbulan' GROUP BY head,kode,tahunbulan) a
+                                LEFT JOIN acc_kiraan b ON a.kode = b.kode  ORDER BY tahunbulan, a.kode")->result_array();
+
+    }
+
+    function sum_saldo_pendapatan_tahun($tahun)
+    {   
+        return $this->db->query("SELECT SUM(saldo) AS saldo FROM (SELECT head,kode,SUM(saldo) AS saldo,tahunbulan,proyekfk,kontrakfk 
+                                FROM  acc_pendapatan WHERE tahunbulan LIKE'$tahun%' GROUP BY head,kode,tahunbulan) a
+                                LEFT JOIN acc_kiraan b ON a.kode = b.kode  ORDER BY tahunbulan, a.kode")->result_array();
+
+    }
+
+    function sum_saldo_biaya_tahun($tahun)
+    {   
+        return $this->db->query("SELECT SUM(saldo) AS saldo FROM (SELECT head,kode,SUM(saldo) AS saldo,tahunbulan,proyekfk,kontrakfk 
+                                FROM  acc_biaya WHERE tahunbulan LIKE'$tahun%' GROUP BY head,kode,tahunbulan) a
+                                LEFT JOIN acc_kiraan b ON a.kode = b.kode  ORDER BY tahunbulan, a.kode")->result_array();
+
+    }        
 
 }

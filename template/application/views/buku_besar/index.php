@@ -14,17 +14,26 @@
                             </h2>
                         </div>
                         <div class="body">
-                        <form id="form-filter">
+                        <div class="demo-radio-button" >
+                        <form method="post" action="<?php echo base_url("buku_besar/pencarian")?>">
                         <div class="row clearfix">
-                                <div class="form-group">
-                                    <label for="kode" class="col-sm-2 control-label">Kode</label>
-                                    <div class="col-sm-4">
-                                        <?php echo $form_country; ?>
-                                    </div>
+                                <div class="col-sm-4">
+                                    <label>Kode</label>
+                                    <select name="kode" class="form-control">
+                                        <option value="">-- Please select --</option>
+                                        <?php 
+                                        foreach($m_buku_besar_kode as $m)
+                                        {
+                                            $selected = ($m['kode'] == $this->input->post('kode')) ? ' selected="selected"' : "";
+
+                                            echo '<option value="'.$m['kode'].'" '.$selected.'>'.$m['kode'].'</option>';
+                                        } 
+                                        ?>
+                                    </select>
                                 </div>
                         </div>
                         <div class="row clearfix">
-                                <!-- <div class="col-sm-4">
+                                <div class="col-sm-4">
                                     <label>Tanggal Awal</label>
                                     <div class="form-group">
                                         <div class="form-line">
@@ -45,34 +54,79 @@
                                             <input name = "date_akhir" type="text" class="datepicker form-control" placeholder="Please choose a date...">
                                         </div>
                                     </div>
-                                </div> -->
-                                <div class="form-group">
-                                    <label for="LastName" class="col-sm-2 control-label"></label>
-                                    <div class="col-sm-4">
-                                        <button type="button" id="btn-filter" class="btn btn-primary">Filter</button>
-                                        <button type="button" id="btn-reset" class="btn btn-default">Reset</button>
-                                    </div>
                                 </div>
                         </div>
-                        <!-- <div class="row clearfix">
+                        <div class="row clearfix">
                         <div class="col-sm-6">
-                            <button type="submit" class="btn bg-blue-grey waves-effect">
+                            <button id = "search" type="submit" class="btn bg-deep-orange waves-effect">
                                     <i class="material-icons">search</i>
                                     <span>SEARCH</span>
                              </button>
-                        </div>
-                        </div> -->
-                        
-                        </form>
 
-                        <?php if($this->session->flashdata('message')!=null OR $this->session->flashdata('message')!='') {?>
-                            <div class="alert alert-danger alert-dismissable">
+                             <button class="btn bg-grey waves-effect">
+                                    <i class="material-icons">replay</i>
+                                    <span>RESET</span>
+                             </button>
+                        </div>
+                        </div>
+                        </div>
+                        </form>
+                        <div id="alert-buku-besar" class="alert alert-danger">
                                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                    <?php echo $this->session->flashdata('message'); ?>
-                                    <?php echo $this->session->set_flashdata('message',''); ?>
+                                        Isikan data dengan lengkap!
                             </div>
-                        <?php } ?>
-                            <div class="table-responsive">
+
+                            </br></br>
+
+                            <div class="row clearfix">
+                                <div class="col-sm-4" >
+                                        <p class="font-bold" style="font-size: 14px">Saldo Awal</p></br>
+                                </div>
+                                <div class="col-sm-1">
+                                        <p class="font-bold" style="font-size: 14px"> : </p>
+                                </div>
+                                <div class="col-sm-4">
+                                        <p class="font-bold" style="font-size: 14px">
+                                            <?php foreach($saldo_awal as $m){
+
+                                                if($m['head']=='1'||$m['head']=='5'||$m['head']=='6'||$m['head']=='7'||$m['head']=='9'){
+                                                        $saldo_awal = $m['debit'] - $m['kredit'];
+                                                        }
+                                                else{
+                                                        $saldo_awal = $m['kredit'] - $m['debit'];
+                                                }
+
+                                            }
+                                            echo "Rp".number_format($saldo_awal,2,",","."); 
+                                            ?>
+                                        </p>
+                                </div>
+                            </div>
+
+                            <div class="row clearfix">
+                                <div class="col-sm-4">
+                                        <p class="font-bold" style="font-size: 14px">Saldo Akhir</p></br>
+                                </div>
+                                <div class="col-sm-1">
+                                        <p class="font-bold" style="font-size: 14px"> : </p>
+                                </div>
+                                <div class="col-sm-4">
+                                        <p class="font-bold" style="font-size: 14px">
+                                            <?php foreach($saldo_akhir as $m){
+                                                if($m['head']=='1'||$m['head']=='5'||$m['head']=='6'||$m['head']=='7'||$m['head']=='9'){
+                                                        $saldo_akhir = $m['debit'] - $m['kredit'];
+                                                        }
+                                                else{
+                                                        $saldo_akhir = $m['kredit'] - $m['debit'];
+                                                }
+                                            }
+                                            echo "Rp".number_format($saldo_awal+$saldo_akhir,2,",","."); 
+                                            ?>
+                                        </p>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive" id="table-r">
                                 <table class="table table-bordered table-striped table-hover dataTable js-exportable" id="table">
                                     <thead>
                                         <tr>
@@ -83,6 +137,7 @@
                                             <th>Kode</th>
                                             <th>Debit</th>
                                             <th>Kredit</th>
+                                            <th>Saldo</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -94,10 +149,21 @@
                                             <th>Kode</th>
                                             <th>Debit</th>
                                             <th>Kredit</th>
+                                            <th>Saldo</th>
                                         </tr>
                                     </tfoot>
-                                    <tbody>
-                                        <!-- <?php $no=1;foreach($m_buku_besar as $m){ ?>
+                                    <tbody id="show_data">
+                                        <?php 
+                                        $no=1;
+                                        $saldo=$saldo_awal;
+                                        foreach($m_buku_besar as $m){ 
+                                        if($m['head']=='1'||$m['head']=='5'||$m['head']=='6'||$m['head']=='7'||$m['head']=='9'){
+                                                        $saldo = $saldo + ($m['debit'] - $m['kredit']);
+                                                        }
+                                        else{
+                                                        $saldo = $saldo + ($m['kredit'] - $m['debit']);
+                                        }
+                                        ?>
                                             <tr>
                                                 <td><?php echo $no; ?></td>
                                                 <td><?php echo substr($m['tanggal'], 0,11); ?></td>
@@ -106,9 +172,10 @@
                                                 <td><?php echo $m['kode']; ?></td>
                                                 <td><?php echo 'Rp. '.number_format($m['debit'],2,",","."); ?></td>
                                                 <td><?php echo 'Rp. '.number_format($m['kredit'],2,",","."); ?></td>
+                                                <td><?php echo 'Rp. '.number_format($saldo,2,",","."); ?></td>
                                                                                                                        
                                             </tr>
-                                        <?php $no++;} ?> -->
+                                        <?php $no++;} ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -120,10 +187,11 @@
         </div>
 
 <!-- 
-           
-
             <!-- Jquery Core Js -->
     <script src="<?php echo base_url('asset/template') ?>/plugins/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core Js -->
+<!--     <script src="<?php echo base_url('asset/template') ?>/plugins/bootstrap/js/bootstrap.js"></script> -->
 
     <!-- Jquery DataTable Plugin Js -->
     <script src="<?php echo base_url('asset/template') ?>/plugins/jquery-datatable/jquery.dataTables.js"></script>
@@ -136,84 +204,34 @@
     <script src="<?php echo base_url('asset/template') ?>/plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
     <script src="<?php echo base_url('asset/template') ?>/plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
 
+        <script type="text/javascript">
 
+    $('#alert-buku-besar').hide();
 
-    <script type="text/javascript">
+    $(document).ready(function() {
+        // $('#alert-laba-rugi').hide();
 
-var table;
-
-$(document).ready(function() {
-
-    //datatables
-    table = $('#table').DataTable({ 
-
-        "processing": true, //Feature control the processing indicator.
-        "serverSide": true, //Feature control DataTables' server-side processing mode.
-        "order": [], //Initial no order.
-
-        // Load data for the table's content from an Ajax source
-        "ajax": {
-            "url": "<?php echo site_url('buku_besar/ajax_list')?>",
-            "type": "POST",
-            "data": function ( data ) {
-                data.kode = $('#kode').val();
-            }
-        },
-
-        //Set column definition initialisation properties.
-        "columnDefs": [
-        { 
-            "targets": [ 0 ], //first column / numbering column
-            "orderable": false, //set not orderable
-        },
-        ],
+        $('#table').dataTable({
+        "paging": false,
 
         
+        dom: 'Bfrtip',
+
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+
+
+        });
+
+
+        $.fn.dataTable.ext.errMode = 'none';
 
 
     });
 
 
-    
-    $('#btn-filter').click(function(){ //button filter event click
-        table.ajax.reload();  //just reload table
-    });
-    $('#btn-reset').click(function(){ //button reset event click
-        $('#form-filter')[0].reset();
-        table.ajax.reload();  //just reload table
-    });
+    </script>    
 
 
 
-});
-
-</script>
-
-    <!-- Bootstrap Core Js -->
-<!--     <script src="<?php echo base_url('asset/template') ?>/plugins/bootstrap/js/bootstrap.js"></script> -->
-
-    <!-- Custom Js -->
-    <script src="<?php echo base_url('asset/template') ?>/js/admin.js"></script>
-    <script src="<?php echo base_url('asset/template') ?>/js/pages/tables/jquery-datatable.js"></script>
-    <script src="<?php echo base_url('asset/template') ?>/js/pages/forms/basic-form-elements.js"></script>
-    <script src="<?php echo base_url('asset/template') ?>/js/pages/index.js"></script>
-
-    <!-- Select Plugin Js -->
-    <script src="<?php echo base_url('asset/template') ?>/plugins/bootstrap-select/js/bootstrap-select.js"></script>
-
-    <!-- Slimscroll Plugin Js -->
-    <script src="<?php echo base_url('asset/template') ?>/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
-
-    <!-- Waves Effect Plugin Js -->
-    <script src="<?php echo base_url('asset/template') ?>/plugins/node-waves/waves.js"></script>
-
-    <!-- Autosize Plugin Js -->
-    <script src="<?php echo base_url('asset/template') ?>/plugins/autosize/autosize.js"></script>
-
-    <script type="text/javascript" src="<?php echo base_url('asset/template'); ?>/js/jquery.price_format.1.7.min.js"></script>
-
-      <!-- Moment Plugin Js -->
-    <script src="<?php echo base_url('asset/template'); ?>/plugins/momentjs/moment.js"></script>
-
-    <!-- Bootstrap Material Datetime Picker Plugin Js -->
-    <script src="<?php echo base_url('asset/template'); ?>/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>

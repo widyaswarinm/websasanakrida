@@ -22,8 +22,14 @@ class Laba_rugi extends CI_Controller{
      */
     function index()
     {
+        $bulan_s = date('m');
+        $tahun_s = date('Y');
+
+        $tahunbulan_s = $tahun_s.$bulan_s;
         
-        $data['m_laba_rugi'] = $this->M_laba_rugi->get_all_m_laba_rugi();
+        $data['m_laba_rugi'] = $this->M_laba_rugi->get_all_m_laba_rugi_sekarang($tahunbulan_s);
+        $data['sum_pendapatan'] = $this->M_laba_rugi->sum_saldo_pendapatan($tahunbulan_s);
+        $data['sum_biaya'] = $this->M_laba_rugi->sum_saldo_biaya($tahunbulan_s);
 
         $data['_view'] = 'laba_rugi/index';
         $this->load->view('layout/main', $data);
@@ -31,27 +37,52 @@ class Laba_rugi extends CI_Controller{
 
     function pencarian(){
         
-        if($this->input->get('bulan')!=''){
-            $bulan=$this->input->get('bulan');
-            $tahun=$this->input->get('tahun');
+        if(($this->input->post('bulan')=='') && ($this->input->post('tahun')=='')){
+            
+            $this->session->set_flashdata('message','Pilih bulan atau tahun');
+
+            $bulan_s = date('m');
+            $tahun_s = date('Y');
+            
+            $tahunbulan_s = $tahun_s.$bulan_s;
+        
+            $data['m_laba_rugi'] = $this->M_laba_rugi->get_all_m_laba_rugi_sekarang($tahunbulan_s);
+            $data['sum_pendapatan'] = $this->M_laba_rugi->sum_saldo_pendapatan($tahunbulan_s);
+            $data['sum_biaya'] = $this->M_laba_rugi->sum_saldo_biaya($tahunbulan_s);
+
+        }else if(($this->input->post('bulan')!='') && ($this->input->post('tahun')=='')){
+            
+            $this->session->set_flashdata('message','Pilih tahun');
+
+            $bulan_s = date('m');
+            $tahun_s = date('Y');
+            
+            $tahunbulan_s = $tahun_s.$bulan_s;
+        
+            $data['m_laba_rugi'] = $this->M_laba_rugi->get_all_m_laba_rugi_sekarang($tahunbulan_s);
+            $data['sum_pendapatan'] = $this->M_laba_rugi->sum_saldo_pendapatan($tahunbulan_s);
+            $data['sum_biaya'] = $this->M_laba_rugi->sum_saldo_biaya($tahunbulan_s);
+        }
+        else if(($this->input->post('tahun')!='') && ($this->input->post('bulan')=='')){
+            $tahun=$this->input->post('tahun');
+
+            $data['m_laba_rugi'] = $this->M_laba_rugi->pencarian_tahun($tahun);
+            $data['sum_pendapatan'] = $this->M_laba_rugi->sum_saldo_pendapatan_tahun($tahun);
+            $data['sum_biaya'] = $this->M_laba_rugi->sum_saldo_biaya_tahun($tahun);
+
+        }else if(($this->input->post('bulan')!='') && ($this->input->post('tahun')!='')){
+            $bulan=$this->input->post('bulan');
+            $tahun=$this->input->post('tahun');
 
             $tahunbulan = $tahun.$bulan;
             
             $data['m_laba_rugi'] = $this->M_laba_rugi->pencarian_bulan($tahunbulan);
+            $data['sum_pendapatan'] = $this->M_laba_rugi->sum_saldo_pendapatan($tahunbulan);
+            $data['sum_biaya'] = $this->M_laba_rugi->sum_saldo_biaya($tahunbulan);
 
-        }else if($this->input->get('triwulan')!=''){
-            $triwulan=$this->input->get('triwulan');
-            $tahun=$this->input->get('tahun');
-
-            $tahunbulan1 = $tahun.substr($triwulan, 0,2);
-            $tahunbulan2 = $tahun.substr($triwulan, -4,-2);
-            $tahunbulan3 = $tahun.substr($triwulan,-2);
-            
-            $data['m_laba_rugi'] = $this->M_laba_rugi->pencarian_triwulan($tahunbulan1, $tahunbulan2, $tahunbulan3);
         }
 
-
-            
+           
         $data['_view'] = 'laba_rugi/index';
         $this->load->view('layout/main', $data);
         

@@ -14,14 +14,12 @@
                             </h2>
                         </div>
                         <div class="body">
-                        <div class="demo-radio-button" >
-                        <form method="get" action="<?php echo base_url("laba_rugi/pencarian")?>">
+                        <form method="post" action="<?php echo base_url("laba_rugi/pencarian")?>">
                         <div class="row clearfix">
                                 <div class="col-sm-4">
-                                    <input name="group1" type="radio" id="bulan" class="radio-col-blue-grey with-gap" />
                                     <label for="bulan">Bulan</label>
                                     
-                                    <select class="form-control show-tick" name="bulan">
+                                    <select class="form-control show-tick" name="bulan" data-live-search="true">
                                         <option value="">-- Please select --</option>
                                         <option value="01">Januari</option>
                                         <option value="02">Februari</option>
@@ -37,31 +35,10 @@
                                         <option value="12">Desember</option>
                                     </select>
                                 </div>
+
                                 <div class="col-sm-4">
-                                    <input name="group2" type="radio" id="triwulan" class="radio-col-blue-grey with-gap"/>
-                                    <label for="triwulan">Triwulan</label>
-                                    <select class="form-control show-tick" name="triwulan"  ); ?>>
-                                        <option value="">-- Please select --</option>
-                                        <option value="010203">Januari - Maret</option>
-                                        <option value="040506">April - Juni</option>
-                                        <option value="070809">Juli - September</option>
-                                        <option value="101112">Oktober - Desember</option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-4">
-                                    <input name="group3" type="radio" id="semester" class="radio-col-blue-grey with-gap"/>
-                                    <label for="semester">Semester</label>
-                                    <select class="form-control show-tick" name="semester">
-                                        <option value="">-- Please select --</option>
-                                        <option value="10">Januari - Juni</option>
-                                        <option value="20">Juli - Desember</option>
-                                    </select>
-                                </div>
-                        </div>
-                        <div class="row clearfix">
-                                <div class="col-sm-6">
-                                    <p>Tahun</p>
-                                    <select class="form-control show-tick" name = "tahun" required="">
+                                    <label for="tahun">Tahun</label>
+                                    <select class="form-control show-tick" name = "tahun" data-live-search="true">
                                         <option value="">-- Please Select --</option>
                                         <?php 
                                             for($i = '2016'; $i<=date('Y'); $i+=1){
@@ -73,16 +50,80 @@
                         </div>
                         <div class="row clearfix">
                         <div class="col-sm-6">
-                            <button type="submit" class="btn bg-blue-grey waves-effect">
+                            <button type="submit" class="btn bg-deep-orange waves-effect">
                                     <i class="material-icons">search</i>
                                     <span>SEARCH</span>
                              </button>
+
+                             <button class="btn bg-grey waves-effect">
+                                    <i class="material-icons">replay</i>
+                                    <span>RESET</span>
+                             </button>
+                        
                         </div>
                         </div>
-                        </div>
+
                         </form>
+
+                            <div id="alert-laba-rugi" class="alert alert-danger">
+                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                        Isikan data dengan lengkap!
+                            </div>
+                        
+
+                            </br></br>
+
+                            <div class="row clearfix">
+                                <div class="col-sm-4" >
+                                        <p class="font-bold" style="font-size: 14px">Total Pendapatan</p></br>
+                                </div>
+                                <div class="col-sm-1">
+                                        <p class="font-bold" style="font-size: 14px"> : </p>
+                                </div>
+                                <div class="col-sm-4">
+                                        <p class="font-bold" style="font-size: 14px">
+                                            <?php foreach($sum_pendapatan as $m){
+                                                        $pendapatan = $m['saldo'];
+                                            } 
+
+                                            echo "Rp".number_format($pendapatan,2,",",".");?>
+                                        </p>
+                                </div>
+                            </div>
+
+                            <div class="row clearfix">
+                                <div class="col-sm-4">
+                                        <p class="font-bold" style="font-size: 14px">Total Biaya</p></br>
+                                </div>
+                                <div class="col-sm-1">
+                                        <p class="font-bold" style="font-size: 14px"> : </p>
+                                </div>
+                                <div class="col-sm-4">
+                                        <p class="font-bold" style="font-size: 14px">
+                                            <?php foreach($sum_biaya as $m){
+                                                       $biaya = $m['saldo']; 
+                                            } 
+                                            echo "Rp".number_format($biaya,2,",","."); ?>
+                                        </p>
+                                </div>
+                            </div>
+
+                            <div class="row clearfix">
+                                <div class="col-sm-4">
+                                        <p class="font-bold" style="font-size: 14px">Laba</p></br>
+                                </div>
+                                <div class="col-sm-1">
+                                        <p class="font-bold" style="font-size: 14px"> : </p>
+                                </div>
+                                <div class="col-sm-4">
+                                        <p class="font-bold" style="font-size: 14px">
+                                            <?php echo "Rp".number_format($pendapatan-$biaya,2,",","."); ?>
+                                        </p>
+                                </div>
+                            </div>
+
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <table id="table" class="table table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
                                         <tr>
                                             <th>No. </th>
@@ -111,16 +152,16 @@
                                                 <td><?php echo $no; ?></td>
                                                 <td><?php echo $m['kode']; ?></td>
                                                 <td><?php echo $m['nama']; ?></td>
-                                                <td><?php if ($m['head'] == '4'){
-                                                        echo $m['saldo']; 
+                                                <td><?php if ($m['head'] == '5'||$m['head'] == '6'||$m['head'] == '7'||$m['head'] == '9'){
+                                                        echo "Rp".number_format($m['saldo'],2,",",".");
                                                     }else {
-                                                        echo '0';
+                                                        echo "Rp".number_format('0',2,",","."); 
                                                     }
                                                     ?></td>                    
-                                                <td><?php if ($m['head'] == '6' || $m['head'] == '5'){
-                                                        echo $m['saldo']; 
+                                                <td><?php if ($m['head'] == '4' || $m['head'] == '8'){
+                                                        echo "Rp".number_format($m['saldo'],2,",",".");
                                                     }else {
-                                                        echo '0';
+                                                        echo "Rp".number_format('0',2,",","."); 
                                                     }
                                                     ?></td>
                                                 <td>
@@ -130,19 +171,21 @@
                                                     $tahun = substr($tahbul, 0, 4);
                                                     
                                                     switch($bulan){
-                                                        case '01' : echo "Januari"; break;
-                                                        case '02' : echo "Februari"; break;
-                                                        case '03' : echo "Maret"; break;
-                                                        case '04' : echo "April"; break;
-                                                        case '05' : echo "Mei"; break;
-                                                        case '06' : echo "Juni"; break;
-                                                        case '07' : echo "Juli"; break;
-                                                        case '08' : echo "Agustus"; break;
-                                                        case '09' : echo "September"; break;
-                                                        case '10' : echo "Oktober"; break;
-                                                        case '11' : echo "November"; break;
-                                                        case '12' : echo "Desember"; break;
+                                                        case '01' : $bulan = "Januari"; break;
+                                                        case '02' : $bulan = "Februari"; break;
+                                                        case '03' : $bulan = "Maret"; break;
+                                                        case '04' : $bulan = "April"; break;
+                                                        case '05' : $bulan = "Mei"; break;
+                                                        case '06' : $bulan = "Juni"; break;
+                                                        case '07' : $bulan = "Juli"; break;
+                                                        case '08' : $bulan = "Agustus"; break;
+                                                        case '09' : $bulan = "September"; break;
+                                                        case '10' : $bulan = "Oktober"; break;
+                                                        case '11' : $bulan = "November"; break;
+                                                        case '12' : $bulan = "Desember"; break;
                                                     }
+
+                                                    echo $bulan;
                                                     ?>
                                                 </td>
                                                <td><?php echo $tahun; ?></td>                                                                       
@@ -150,6 +193,7 @@
                                         <?php $no++;} ?>
                                     </tbody>
                                 </table>
+
                             </div>
                         </div>
                     </div>
@@ -157,14 +201,12 @@
             </div>
             <!-- #END# Exportable Table -->
         </div>
-<!-- 
-            <!-- Jquery Core Js -->
+
+        <!-- Jquery Core Js -->
     <script src="<?php echo base_url('asset/template') ?>/plugins/jquery/jquery.min.js"></script>
 
-    <!-- Bootstrap Core Js -->
-<!--     <script src="<?php echo base_url('asset/template') ?>/plugins/bootstrap/js/bootstrap.js"></script> -->
-
-    <!-- Jquery DataTable Plugin Js -->
+    
+     <!-- Jquery DataTable Plugin Js -->
     <script src="<?php echo base_url('asset/template') ?>/plugins/jquery-datatable/jquery.dataTables.js"></script>
     <script src="<?php echo base_url('asset/template') ?>/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
     <script src="<?php echo base_url('asset/template') ?>/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
@@ -175,24 +217,32 @@
     <script src="<?php echo base_url('asset/template') ?>/plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
     <script src="<?php echo base_url('asset/template') ?>/plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
 
-    <!-- Custom Js -->
-    <script src="<?php echo base_url('asset/template') ?>/js/admin.js"></script>
-    <script src="<?php echo base_url('asset/template') ?>/js/pages/tables/jquery-datatable.js"></script>
-    <script src="<?php echo base_url('asset/template') ?>/js/pages/forms/basic-form-elements.js"></script>
-    <script src="<?php echo base_url('asset/template') ?>/js/pages/index.js"></script>
 
-    <!-- Select Plugin Js -->
-    <script src="<?php echo base_url('asset/template') ?>/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+    <script type="text/javascript">
 
-    <!-- Slimscroll Plugin Js -->
-    <script src="<?php echo base_url('asset/template') ?>/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+    $('#alert-laba-rugi').hide();
 
-    <!-- Waves Effect Plugin Js -->
-    <script src="<?php echo base_url('asset/template') ?>/plugins/node-waves/waves.js"></script>
+    $(document).ready(function() {
+        // $('#alert-laba-rugi').hide();
 
-    <!-- Autosize Plugin Js -->
-    <script src="<?php echo base_url('asset/template') ?>/plugins/autosize/autosize.js"></script>
+        $('#table').dataTable({
+        "paging": false,
 
-    <script type="text/javascript" src="<?php echo base_url('asset/template'); ?>/js/jquery.price_format.1.7.min.js"></script>
+        
+        dom: 'Bfrtip',
 
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+
+
+        });
+
+        $.fn.dataTable.ext.errMode = 'none';
+
+
+    });
+
+
+    </script>    
 
