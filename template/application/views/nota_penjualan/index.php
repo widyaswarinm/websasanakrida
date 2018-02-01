@@ -65,8 +65,7 @@
 						</div>
                         </form>
 
-                            <div id="alert-nota" class="alert alert-danger alert-dismissable">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <div id="alert-nota" class="alert alert-danger">                                
                                 Isikan data dengan lengkap!						
                             </div>
                             <div class="table-responsive">
@@ -105,11 +104,9 @@
             </div>
             <!-- #END# Exportable Table -->
         </div>
-
-<!-- 
            
 
-            <!-- Jquery Core Js -->
+    <!-- Jquery Core Js -->
     <script src="<?php echo base_url('asset/template') ?>/plugins/jquery/jquery.min.js"></script>
 
     <!-- Jquery DataTable Plugin Js -->
@@ -123,20 +120,22 @@
     <script src="<?php echo base_url('asset/template') ?>/plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
     <script src="<?php echo base_url('asset/template') ?>/plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
 
-
+	<!-- Autosize Plugin Js -->
+    <script src="<?php echo base_url('asset/template') ?>/plugins/autosize/autosize.js"></script>
 
     <script type="text/javascript">
 
 		var table;
-
+		$("#alert-nota").hide();
 		$(document).ready(function() {
-			$("#alert-nota").hide();
+			
 			//datatables
 			table = $('#table').DataTable({ 
 				"paging": false,
 				"processing": true, //Feature control the processing indicator.
 				"serverSide": true, //Feature control DataTables' server-side processing mode.
 				"order": [], //Initial no order.
+				
 
 				// Load data for the table's content from an Ajax source
 				"ajax": {
@@ -157,8 +156,11 @@
 				},
 				],
 
+				dom: 'Bfrtip',
+				buttons: [
+					'copy', 'csv', 'excel', 'pdf', 'print'
+				],
 				
-
 			});
 
 
@@ -167,7 +169,7 @@
 				if($('#tglawal').val()=='' || $('#tglakhir').val()==''){					
 					$("#alert-nota").show();
 				} else{
-					$("#alert-nota").hide();
+					$("#alert-nota").hide();					
 					table.ajax.reload();  //just reload table
 				}
 			});
@@ -194,30 +196,3 @@
 		}// resetForm
 
 	</script>
-
-    <!-- Bootstrap Core Js -->
-<!--     <script src="<?php echo base_url('asset/template') ?>/plugins/bootstrap/js/bootstrap.js"></script> -->
-
-    <!-- Custom Js -->
-    <script src="<?php echo base_url('asset/template') ?>/js/admin.js"></script>
-    <script src="<?php echo base_url('asset/template') ?>/js/pages/tables/jquery-datatable.js"></script>
-    <script src="<?php echo base_url('asset/template') ?>/js/pages/forms/basic-form-elements.js"></script>
-    <script src="<?php echo base_url('asset/template') ?>/js/pages/index.js"></script>
-
-    <!-- Select Plugin Js -->
-    <script src="<?php echo base_url('asset/template') ?>/plugins/bootstrap-select/js/bootstrap-select.js"></script>
-
-    <!-- Slimscroll Plugin Js -->
-    <script src="<?php echo base_url('asset/template') ?>/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
-
-    <!-- Waves Effect Plugin Js -->
-    <script src="<?php echo base_url('asset/template') ?>/plugins/node-waves/waves.js"></script>
-
-    <!-- Autosize Plugin Js -->
-    <script src="<?php echo base_url('asset/template') ?>/plugins/autosize/autosize.js"></script>
-
-    <!-- Moment Plugin Js -->
-    <script src="<?php echo base_url('asset/template'); ?>/plugins/momentjs/moment.js"></script>
-
-    <!-- Bootstrap Material Datetime Picker Plugin Js -->
-    <script src="<?php echo base_url('asset/template'); ?>/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>

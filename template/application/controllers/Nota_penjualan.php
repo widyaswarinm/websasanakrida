@@ -7,6 +7,12 @@ class Nota_penjualan extends CI_Controller {
     {
         parent::__construct();
         $this->load->model('M_nota_penjualan','transaksi');
+		
+		if(!$this->session->userdata('islogin')) {
+
+            redirect('dashboard');
+
+        }
     }
 
     public function index()

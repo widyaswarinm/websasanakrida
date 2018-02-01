@@ -307,3 +307,16 @@
                 <!-- #END# Browser Usage -->
             </div>
         </div>
+		
+	<!-- Jquery Core Js -->
+    <script src="<?php echo base_url('asset/template') ?>/plugins/jquery/jquery.min.js"></script>
+	
+	<!-- Flot Charts Plugin Js -->
+    <script src="<?php echo base_url();?>asset/template/plugins/flot-charts/jquery.flot.js"></script>
+    <script src="<?php echo base_url();?>asset/template/plugins/flot-charts/jquery.flot.resize.js"></script>
+    <script src="<?php echo base_url();?>asset/template/plugins/flot-charts/jquery.flot.pie.js"></script>
+    <script src="<?php echo base_url();?>asset/template/plugins/flot-charts/jquery.flot.categories.js"></script>
+    <script src="<?php echo base_url();?>asset/template/plugins/flot-charts/jquery.flot.time.js"></script>
+	
+	<!-- Custom Js -->
+	<script src="<?php echo base_url();?>asset/template/js/pages/index.js">

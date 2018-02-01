@@ -19,9 +19,9 @@ class M_nota_penjualan extends CI_Model {
     {
         
         //add custom filter here
-        if($this->input->post('nama')!='')
+        if($this->input->post('nama'))
         {
-            $this->db->where('nama', $this->input->post('nama'));
+            $this->db->like('nama', substr($this->input->post('nama'),0,-1));			
         }
 		if($this->input->post('tglawal')!='')
 		{
@@ -36,8 +36,7 @@ class M_nota_penjualan extends CI_Model {
 			$this->db->where('tanggal <=', date('Y-m-t H:i:s', strtotime(date('Y-m-d').'23:59:59')));
 		}		
 
-        $this->db->select('*');
-        $this->db->from($this->table);
+        
 
         $i = 0;
     
@@ -82,6 +81,9 @@ class M_nota_penjualan extends CI_Model {
             $i++;
         }
         
+		$this->db->select('*');
+        $this->db->from($this->table);
+		
         if(isset($_POST['order'])) // here order processing
         {
             $this->db->order_by($this->column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
